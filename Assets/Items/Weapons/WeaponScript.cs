@@ -8,7 +8,6 @@ public class WeaponScript : MonoBehaviour
     public bool multiplesProjectilesTypes;
     public GameObject[] projectilePrefab;
     public Sprite weaponSprite;
-    private Animator animator;
 
     [Header("Parameters")]
     public bool infiniteAmmo;
@@ -72,8 +71,6 @@ public class WeaponScript : MonoBehaviour
         if (GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
 
         transform.localPosition = Vector3.zero;
-
-        animator = GetComponent<Animator>();
 
         canShoot = true;
     }
@@ -158,7 +155,6 @@ public class WeaponScript : MonoBehaviour
 
     private void Shoot()
     {
-        animator.SetBool("Shoot", true);
         canShoot = false;
         if (!infiniteAmmo)
         {
@@ -198,10 +194,5 @@ public class WeaponScript : MonoBehaviour
     {
         isReloading = false;
         canShoot = true;
-    }
-
-    public void SetBoolFalse(string name)
-    {
-        animator.SetBool(name, false);
     }
 }
