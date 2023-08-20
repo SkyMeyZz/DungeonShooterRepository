@@ -61,7 +61,7 @@ public class WeaponScript : MonoBehaviour
         shootPoint = GameObject.Find("ShootPoint");
         if (shootPoint == null) { Debug.LogError("Couldn't find the ShootPoint GameObject inside the scene on this item :" + this.gameObject.name); }
 
-        weaponSpriteHolder = GameObject.Find("WeaponSprite");
+        weaponSpriteHolder = GetComponentInChildren<SpriteRenderer>().gameObject;
         if (weaponSpriteHolder == null) { Debug.LogError("Couldn't find the WeaponSprite GameObject inside the scene on this item :" + this.gameObject.name); }
 
         weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponSprite;
