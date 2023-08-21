@@ -161,27 +161,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af591e498e556ff4b8d0c2ec92d6af8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponScriptableObject: {fileID: 11400000, guid: 519441747a6b32748bcbe4d563e214b7, type: 2}
   shootPoint: {fileID: 5713778834366603214}
-  weaponSpriteHolder: {fileID: 0}
-  multiplesProjectilesTypes: 0
-  projectilePrefab:
-  - {fileID: 764240487574787305, guid: 192153e00c6b579408ecfdd0803599a5, type: 3}
-  weaponSprite: {fileID: -206425911, guid: 1667e0f7c9ed98d4f917bd0152633ef8, type: 3}
-  infiniteAmmo: 0
-  infiniteMagazine: 0
-  currentAmmoInMagazine: 20
-  ammoPerMagazine: 20
+  weaponSpriteHolder: {fileID: 223571346587153291}
   currentAmmo: 500
-  maxAmmo: 500
-  ammoPerShot: 1
-  reloadTime: 1
+  currentAmmoInMagazine: 20
   isReloading: 0
   canShoot: 0
-  timeBetweenShot: 0.05
-  shootAngle: 20
-  bulletsPerShot: 5
-  shootingMode: 0
-  hasRecoil: 0
-  recoilForce: 0
   noFlipCoord: {x: 0.235, y: 0.135, z: 0}
   flipCoord: {x: 0.235, y: -0.135, z: 0}

@@ -13,7 +13,7 @@ public class WeaponPickup : MonoBehaviour
         heldWeaponScript = heldWeapon.GetComponent<WeaponScript>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = heldWeaponScript.weaponSprite;
+        spriteRenderer.sprite = heldWeaponScript.GetWeaponSO().weaponSprite;
     }
 
     private void Update()

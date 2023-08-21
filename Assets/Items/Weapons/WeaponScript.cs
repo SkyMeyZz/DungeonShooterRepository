@@ -3,35 +3,19 @@ using UnityEngine;
 public class WeaponScript : MonoBehaviour
 {
     [Header("References")]
-    public GameObject shootPoint;
-    public GameObject weaponSpriteHolder;
-    public bool multiplesProjectilesTypes;
-    public GameObject[] projectilePrefab;
-    public Sprite weaponSprite;
+    [SerializeField] private WeaponSO weaponScriptableObject;
+    [SerializeField] private GameObject shootPoint;
+    [SerializeField] private GameObject weaponSpriteHolder;
 
     [Header("Parameters")]
-    public bool infiniteAmmo;
-    public bool infiniteMagazine;
-    public int currentAmmoInMagazine;
-    public int ammoPerMagazine;
     public int currentAmmo;
-    public int maxAmmo;
-    public int ammoPerShot;
-    public float reloadTime;
+    public int currentAmmoInMagazine;
+
     [Space(10)]
     public bool isReloading;
     public bool canShoot;
-    public float timeBetweenShot;
     [Space(10)]
-    public float shootAngle;
-    public int bulletsPerShot;
-    public enum ShootingMode { automatic, semiAutomatic }
-    public ShootingMode shootingMode;
-    [Space(10)]
-    public bool hasRecoil;
-    public float recoilForce;
-    [Space(10)]
-    public Vector3 noFlipCoord;
+    public Vector3 noFlipCoord; 
     public Vector3 flipCoord;
 
     private float reloadTimer;
@@ -51,20 +35,20 @@ public class WeaponScript : MonoBehaviour
     {
         if (isReloading)
         {
-            reloadTimer = reloadTime;
+            reloadTimer = weaponScriptableObject.reloadTime;
             ResetIsReloading();
         }
     }
 
     void Initialisation()
     {
-        shootPoint = GameObject.Find("ShootPoint");
+        //shootPoint = GameObject.Find("ShootPoint");
         if (shootPoint == null) { Debug.LogError("Couldn't find the ShootPoint GameObject inside the scene on this item :" + this.gameObject.name); }
 
-        weaponSpriteHolder = GetComponentInChildren<SpriteRenderer>().gameObject;
+        //weaponSpriteHolder = GetComponentInChildren<SpriteRenderer>().gameObject;
         if (weaponSpriteHolder == null) { Debug.LogError("Couldn't find the WeaponSprite GameObject inside the scene on this item :" + this.gameObject.name); }
 
-        weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponSprite;
+        weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponScriptableObject.weaponSprite;
 
         GameManager.instance.players.GetComponent<PlayerBehaviour>().currentWeapon = this.gameObject;
         transform.parent = GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot.transform;
@@ -77,7 +61,7 @@ public class WeaponScript : MonoBehaviour
 
     private void HandleInputs()
     {
-        if (shootingMode == ShootingMode.automatic)
+        if (weaponScriptableObject.shootingMode == WeaponSO.ShootingMode.automatic)
         {
             if (Input.GetButton("Fire1"))
             {
@@ -95,7 +79,7 @@ public class WeaponScript : MonoBehaviour
                 }
             }
         }
-        else if (shootingMode == ShootingMode.semiAutomatic)
+        else if (weaponScriptableObject.shootingMode == WeaponSO.ShootingMode.semiAutomatic)
         {
             if (Input.GetKeyDown("Fire1"))
             {
@@ -136,18 +120,18 @@ public class WeaponScript : MonoBehaviour
             if (reloadTimer <= 0)
             {
                 ResetIsReloading();
-                if (!infiniteMagazine)
+                if (!weaponScriptableObject.infiniteMagazine)
                 {
-                    currentAmmo -= ammoPerMagazine - currentAmmoInMagazine;
+                    currentAmmo -= weaponScriptableObject.ammoPerMagazine - currentAmmoInMagazine;
                 }
-                currentAmmoInMagazine = ammoPerMagazine;
+                currentAmmoInMagazine = weaponScriptableObject.ammoPerMagazine;
             }
         }
     }
 
     private void Reload()
     {
-        reloadTimer = reloadTime;
+        reloadTimer = weaponScriptableObject.reloadTime;
         isReloading = true;
         canShoot = false;
         Debug.Log("Reloading !");
@@ -156,33 +140,33 @@ public class WeaponScript : MonoBehaviour
     private void Shoot()
     {
         canShoot = false;
-        if (!infiniteAmmo)
+        if (!weaponScriptableObject.infiniteAmmo)
         {
-            currentAmmoInMagazine -= ammoPerShot;
+            currentAmmoInMagazine -= weaponScriptableObject.ammoCostPerShot;
         }
         Debug.Log("Pew !");
-        if (ammoPerShot > 1)
+        if (weaponScriptableObject.ammoCostPerShot > 1)
         {
-            for (int i = 0; i < ammoPerShot; i++)
+            for (int i = 0; i < weaponScriptableObject.ammoCostPerShot; i++)
             {
-                Instantiate(projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-shootAngle / 2, shootAngle / 2))));
+                Instantiate(weaponScriptableObject.projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-weaponScriptableObject.shootAngle / 2, weaponScriptableObject.shootAngle / 2))));
             }
         }
-        else if (shootAngle == 0)
+        else if (weaponScriptableObject.shootAngle == 0)
         {
-            Instantiate(projectilePrefab[0], shootPoint.transform.position, shootPoint.transform.rotation);
+            Instantiate(weaponScriptableObject.projectilePrefab[0], shootPoint.transform.position, shootPoint.transform.rotation);
         }
-        else if (shootAngle > 0)
+        else if (weaponScriptableObject.shootAngle > 0)
         {
-            Instantiate(projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-shootAngle / 2, shootAngle / 2))));
+            Instantiate(weaponScriptableObject.projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-weaponScriptableObject.shootAngle / 2, weaponScriptableObject.shootAngle / 2))));
         }
-        if (hasRecoil)
+        if (weaponScriptableObject.hasRecoil)
         {
             Vector2 dir = GameManager.instance.players.GetComponent<PlayerBehaviour>().mousePos - shootPoint.transform.position;
             Debug.DrawLine(shootPoint.transform.position, dir);
-            GameManager.instance.players.GetComponent<Rigidbody2D>().AddForce(-dir.normalized * recoilForce, ForceMode2D.Impulse);
+            GameManager.instance.players.GetComponent<Rigidbody2D>().AddForce(-dir.normalized * weaponScriptableObject.recoilForce, ForceMode2D.Impulse);
         }
-        Invoke("ResetCanShoot", timeBetweenShot);
+        Invoke("ResetCanShoot", weaponScriptableObject.timeBetweenShot);
     }
 
     private void ResetCanShoot()
@@ -194,5 +178,20 @@ public class WeaponScript : MonoBehaviour
     {
         isReloading = false;
         canShoot = true;
+    }
+
+    public GameObject GetWeaponShootPoint()
+    {
+        return this.shootPoint;
+    }
+
+    public GameObject GetWeaponSpriteHolder()
+    {
+        return this.weaponSpriteHolder;
+    }
+
+    public WeaponSO GetWeaponSO()
+    {
+        return this.weaponScriptableObject;
     }
 }
