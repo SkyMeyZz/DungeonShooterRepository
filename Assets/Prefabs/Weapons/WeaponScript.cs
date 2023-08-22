@@ -56,6 +56,7 @@ public class WeaponScript : MonoBehaviour, IInteractable
         HandleReload();
         HandleState();
     }
+
     private void OnDisable()
     {
         if (isReloading)
@@ -75,7 +76,13 @@ public class WeaponScript : MonoBehaviour, IInteractable
 
         weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponSprite;
 
-        if (infiniteAmmo)
+        GameManager.instance.players.GetComponent<PlayerBehaviour>().currentWeapon = this.gameObject;
+        transform.parent = GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot.transform;
+        if (GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
+
+        transform.localPosition = Vector3.zero;
+
+        if(infiniteAmmo)
         {
             currentAmmoInMagazine = 1;
         }
@@ -154,11 +161,6 @@ public class WeaponScript : MonoBehaviour, IInteractable
                 currentAmmoInMagazine = ammoPerMagazine;
             }
         }
-    }
-
-    private void HandleState()
-    {
-        
     }
 
     private void Reload()
@@ -240,11 +242,7 @@ public class WeaponScript : MonoBehaviour, IInteractable
 
     public void Interact(GameObject interactor)
     {
-        GameManager.instance.players.GetComponent<PlayerBehaviour>().currentWeapon = this.gameObject;
-        transform.parent = GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot.transform;
-        if (GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
-
-        transform.localPosition = Vector3.zero;
+        //interact
     }
 
     public Transform GetTransform()
