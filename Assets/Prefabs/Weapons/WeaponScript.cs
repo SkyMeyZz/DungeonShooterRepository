@@ -15,6 +15,7 @@ public class WeaponScript : MonoBehaviour, IInteractable
     private int currentAmmoInMagazine;
 
     private float reloadTimer;
+    private enum WeaponState { Held, Dropped};
 
     [Header("Weapon Parameter")]
     [SerializeField] private ShootingMode shootingMode;
@@ -53,6 +54,7 @@ public class WeaponScript : MonoBehaviour, IInteractable
     {
         HandleInputs();
         HandleReload();
+        HandleState();
     }
 
     private void OnDisable()

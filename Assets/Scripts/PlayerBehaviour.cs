@@ -55,11 +55,9 @@ public class PlayerBehaviour : MonoBehaviour
 
             //Handle WeaponSpot rotation
             Vector2 lookDir = mousePos - weaponScript.GetWeaponShootPoint().transform.position;
+            lookDir = lookDir.normalized;
             float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-            if (Mathf.Sqrt(Mathf.Pow(lookDir.x, 2) + Mathf.Pow(lookDir.y, 2)) > 1.5f)
-            {
-                weaponRb.rotation = angle;
-            }
+            weaponScript.transform.eulerAngles = new Vector3(0, 0, angle);
             Debug.DrawRay(weaponScript.GetWeaponShootPoint().transform.position, weaponScript.GetWeaponShootPoint().transform.right * 10);
 
 
