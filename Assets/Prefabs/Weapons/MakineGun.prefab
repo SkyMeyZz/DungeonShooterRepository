@@ -164,18 +164,18 @@ MonoBehaviour:
   shootPoint: {fileID: 5713778834366603214}
   weaponSpriteHolder: {fileID: 223571346587153291}
   shootingMode: 0
-  infiniteAmmo: 0
-  infiniteMagazine: 0
+  infiniteAmmo: 1
+  infiniteMagazine: 1
   ammoPerMagazine: 50
   maxAmmo: 500
   ammoCostPerShot: 1
   reloadTime: 1
-  shootAngle: 15
+  shootAngle: 27
   bulletsPerShot: 1
-  timeBetweenShot: 0.1
+  timeBetweenShot: 0.08
   multiplesProjectilesTypes: 0
   projectilePrefab:
-  - {fileID: 764240487574787305, guid: 192153e00c6b579408ecfdd0803599a5, type: 3}
+  - {fileID: 764240487574787305, guid: 5702f0937ff5ca346a19089c08ab9ea8, type: 3}
   hasRecoil: 0
   recoilForce: 0
   weaponSprite: {fileID: 21300000, guid: 41967ddca67260e449d1b44210de3f29, type: 3}
