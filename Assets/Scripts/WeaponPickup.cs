@@ -1,49 +1,32 @@
 using UnityEngine;
 
-public class WeaponPickup : MonoBehaviour
+public class WeaponPickup : MonoBehaviour, IInteractable
 {
-    public GameObject heldWeapon;
+    [SerializeField] private GameObject heldWeapon;
     private WeaponScript heldWeaponScript;
-    private SpriteRenderer spriteRenderer;
-    public bool canBePickedUp;
 
     private void Awake()
     {
         if (heldWeapon == null) { Debug.LogError("no heldItem GameObject in " + this.gameObject.name); }
         heldWeaponScript = heldWeapon.GetComponent<WeaponScript>();
-
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = heldWeaponScript.GetWeaponSO().weaponSprite;
     }
 
-    private void Update()
+    public void Interact(GameObject interactor)
     {
-        if (Input.GetKeyDown(KeyCode.E) && canBePickedUp)
-        {
-            GameManager.instance.players.GetComponent<PlayerBehaviour>().AddWeapon(heldWeapon);
-            Pickup();
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            canBePickedUp = true;
-            Debug.Log("Can pickup a weapon : " + heldWeapon.name);
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            canBePickedUp = false;
-            Debug.Log("Can no longer pickup : " + heldWeapon.name);
-        }
-    }
-    public void Pickup()
-    {
+        interactor.GetComponent<PlayerBehaviour>().AddWeapon(heldWeapon);
         GetComponent<CircleCollider2D>().enabled = false;
         Destroy(this.gameObject);
     }
+
+    public Transform GetTransform()
+    {
+        return this.transform;
+    }
+
+    public GameObject GetheldWeaponPrefab()
+    {
+        return heldWeapon;
+    }
+
+
 }

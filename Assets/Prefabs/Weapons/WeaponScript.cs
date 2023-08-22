@@ -1,24 +1,48 @@
 using UnityEngine;
 
-public class WeaponScript : MonoBehaviour
+public class WeaponScript : MonoBehaviour, IInteractable
 {
+    #region Variables
     [Header("References")]
-    [SerializeField] private WeaponSO weaponScriptableObject;
     [SerializeField] private GameObject shootPoint;
     [SerializeField] private GameObject weaponSpriteHolder;
 
     [Header("Parameters")]
-    public int currentAmmo;
-    public int currentAmmoInMagazine;
+    private bool isReloading;
+    private bool canShoot;
 
-    [Space(10)]
-    public bool isReloading;
-    public bool canShoot;
-    [Space(10)]
-    public Vector3 noFlipCoord; 
-    public Vector3 flipCoord;
+    private int currentAmmo;
+    private int currentAmmoInMagazine;
 
     private float reloadTimer;
+
+    [Header("Weapon Parameter")]
+    [SerializeField] private ShootingMode shootingMode;
+    private enum ShootingMode { automatic, semiAutomatic }
+    [Space(20)]
+    [SerializeField] private bool infiniteAmmo;
+    [SerializeField] private bool infiniteMagazine;
+    [Space(20)]
+    [SerializeField] private int ammoPerMagazine;
+    [SerializeField] private int maxAmmo;
+    [SerializeField] private int ammoCostPerShot;
+    [SerializeField] private float reloadTime;
+    [SerializeField] private float shootAngle;
+    [SerializeField] private int bulletsPerShot;
+    [SerializeField] private float timeBetweenShot;
+    [Space(20)]
+    [SerializeField] private bool multiplesProjectilesTypes;
+    [SerializeField] private GameObject[] projectilePrefab;
+    [Space(20)]
+    [SerializeField] private bool hasRecoil;
+    [SerializeField] private float recoilForce;
+
+    [Header("Visuals")]
+    [SerializeField] private Sprite weaponSprite;
+    [Space(10)]
+    [SerializeField] private Vector3 noFlipCoord;
+    [SerializeField] private Vector3 flipCoord;
+    #endregion
 
     void Awake()
     {
@@ -35,7 +59,7 @@ public class WeaponScript : MonoBehaviour
     {
         if (isReloading)
         {
-            reloadTimer = weaponScriptableObject.reloadTime;
+            reloadTimer = reloadTime;
             ResetIsReloading();
         }
     }
@@ -48,7 +72,7 @@ public class WeaponScript : MonoBehaviour
         //weaponSpriteHolder = GetComponentInChildren<SpriteRenderer>().gameObject;
         if (weaponSpriteHolder == null) { Debug.LogError("Couldn't find the WeaponSprite GameObject inside the scene on this item :" + this.gameObject.name); }
 
-        weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponScriptableObject.weaponSprite;
+        weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponSprite;
 
         GameManager.instance.players.GetComponent<PlayerBehaviour>().currentWeapon = this.gameObject;
         transform.parent = GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot.transform;
@@ -56,12 +80,20 @@ public class WeaponScript : MonoBehaviour
 
         transform.localPosition = Vector3.zero;
 
+        if(infiniteAmmo)
+        {
+            currentAmmoInMagazine = 1;
+        }
+        else currentAmmoInMagazine = ammoPerMagazine;
+
+        currentAmmo = maxAmmo;
+
         canShoot = true;
     }
 
     private void HandleInputs()
     {
-        if (weaponScriptableObject.shootingMode == WeaponSO.ShootingMode.automatic)
+        if (shootingMode == ShootingMode.automatic)
         {
             if (Input.GetButton("Fire1"))
             {
@@ -79,7 +111,7 @@ public class WeaponScript : MonoBehaviour
                 }
             }
         }
-        else if (weaponScriptableObject.shootingMode == WeaponSO.ShootingMode.semiAutomatic)
+        else if (shootingMode == ShootingMode.semiAutomatic)
         {
             if (Input.GetKeyDown("Fire1"))
             {
@@ -120,53 +152,51 @@ public class WeaponScript : MonoBehaviour
             if (reloadTimer <= 0)
             {
                 ResetIsReloading();
-                if (!weaponScriptableObject.infiniteMagazine)
+                if (!infiniteMagazine)
                 {
-                    currentAmmo -= weaponScriptableObject.ammoPerMagazine - currentAmmoInMagazine;
+                    currentAmmo -= ammoPerMagazine - currentAmmoInMagazine;
                 }
-                currentAmmoInMagazine = weaponScriptableObject.ammoPerMagazine;
+                currentAmmoInMagazine = ammoPerMagazine;
             }
         }
     }
 
     private void Reload()
     {
-        reloadTimer = weaponScriptableObject.reloadTime;
+        reloadTimer =  reloadTime;
         isReloading = true;
         canShoot = false;
-        Debug.Log("Reloading !");
     }
 
     private void Shoot()
     {
         canShoot = false;
-        if (!weaponScriptableObject.infiniteAmmo)
+        if (!infiniteAmmo)
         {
-            currentAmmoInMagazine -= weaponScriptableObject.ammoCostPerShot;
+            currentAmmoInMagazine -= ammoCostPerShot;
         }
-        Debug.Log("Pew !");
-        if (weaponScriptableObject.ammoCostPerShot > 1)
+        if (ammoCostPerShot > 1)
         {
-            for (int i = 0; i < weaponScriptableObject.ammoCostPerShot; i++)
+            for (int i = 0; i < ammoCostPerShot; i++)
             {
-                Instantiate(weaponScriptableObject.projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-weaponScriptableObject.shootAngle / 2, weaponScriptableObject.shootAngle / 2))));
+                Instantiate(projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-shootAngle / 2, shootAngle / 2))));
             }
         }
-        else if (weaponScriptableObject.shootAngle == 0)
+        else if (shootAngle == 0)
         {
-            Instantiate(weaponScriptableObject.projectilePrefab[0], shootPoint.transform.position, shootPoint.transform.rotation);
+            Instantiate(projectilePrefab[0], shootPoint.transform.position, shootPoint.transform.rotation);
         }
-        else if (weaponScriptableObject.shootAngle > 0)
+        else if (shootAngle > 0)
         {
-            Instantiate(weaponScriptableObject.projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-weaponScriptableObject.shootAngle / 2, weaponScriptableObject.shootAngle / 2))));
+            Instantiate(projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-shootAngle / 2, shootAngle / 2))));
         }
-        if (weaponScriptableObject.hasRecoil)
+        if (hasRecoil)
         {
             Vector2 dir = GameManager.instance.players.GetComponent<PlayerBehaviour>().mousePos - shootPoint.transform.position;
             Debug.DrawLine(shootPoint.transform.position, dir);
-            GameManager.instance.players.GetComponent<Rigidbody2D>().AddForce(-dir.normalized * weaponScriptableObject.recoilForce, ForceMode2D.Impulse);
+            GameManager.instance.players.GetComponent<Rigidbody2D>().AddForce(-dir.normalized * recoilForce, ForceMode2D.Impulse);
         }
-        Invoke("ResetCanShoot", weaponScriptableObject.timeBetweenShot);
+        Invoke("ResetCanShoot", timeBetweenShot);
     }
 
     private void ResetCanShoot()
@@ -190,8 +220,31 @@ public class WeaponScript : MonoBehaviour
         return this.weaponSpriteHolder;
     }
 
-    public WeaponSO GetWeaponSO()
+    public Vector3 GetFlipCoords()
     {
-        return this.weaponScriptableObject;
+        if (weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY)
+        {
+            return this.flipCoord;
+        }
+        else if (!weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY)
+        {
+            return this.noFlipCoord;
+        }
+        else return Vector3.zero;
+    }
+
+    public Sprite GetWeaponSprite()
+    {
+        return this.weaponSprite;
+    }
+
+    public void Interact(GameObject interactor)
+    {
+        //interact
+    }
+
+    public Transform GetTransform()
+    {
+        return this.transform;
     }
 }

@@ -60,14 +60,14 @@ public class PlayerBehaviour : MonoBehaviour
             {
                 weaponRb.rotation = angle;
             }
-            Debug.DrawLine(weaponScript.GetWeaponShootPoint().transform.position, mousePos);
+            Debug.DrawRay(weaponScript.GetWeaponShootPoint().transform.position, weaponScript.GetWeaponShootPoint().transform.right * 10);
 
 
             //Handle gun flip and arm rotation
             if (weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY)
             {
                 weaponSpot.transform.localPosition = new Vector2(-0.65f, -0.25f);
-                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.flipCoord;
+                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.GetFlipCoords();
                 if (weaponRb.rotation >= -45 && weaponRb.rotation < 45)
                 {
                     weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY = false;
@@ -76,7 +76,7 @@ public class PlayerBehaviour : MonoBehaviour
             else if (!weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY)
             {
                 weaponSpot.transform.localPosition = new Vector2(0.65f, -0.25f);
-                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.noFlipCoord;
+                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.GetFlipCoords();
                 if (weaponRb.rotation < -135 || weaponRb.rotation >= 135)
                 {
                     weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY = true;
@@ -104,6 +104,44 @@ public class PlayerBehaviour : MonoBehaviour
         {
             ScollDown();
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            IInteractable interactable = GetPlayerClosestInterraction();
+            interactable.Interact(this.gameObject);
+        }
+    }
+
+    private IInteractable GetPlayerClosestInterraction()
+    {
+        List<IInteractable> interactablesList = new List<IInteractable>();
+        float interactRange = 2f;
+        Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, interactRange);
+        foreach (Collider2D collider in colliderArray)
+        {
+            if (collider.TryGetComponent(out IInteractable interactables))
+            {
+                interactablesList.Add(interactables);
+            }
+        }
+
+        IInteractable closestInteractable = null;
+        foreach (IInteractable interactables in interactablesList)
+        {
+            if (closestInteractable == null)
+            {
+                closestInteractable = interactables;
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, interactables.GetTransform().position) < Vector3.Distance(transform.position, closestInteractable.GetTransform().position))
+                {
+                    closestInteractable = interactables;
+                }
+            }
+        }
+
+        return closestInteractable;
     }
 
     private void ScollDown()
