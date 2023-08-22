@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseProjectileScript : MonoBehaviour
+public class GuezProjectileScript : MonoBehaviour
 {
     private Rigidbody2D rb;
     public float bulletSpeed;
