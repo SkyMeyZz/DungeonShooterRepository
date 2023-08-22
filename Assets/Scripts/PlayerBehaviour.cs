@@ -54,32 +54,32 @@ public class PlayerBehaviour : MonoBehaviour
             if (weaponScript == null) { Debug.LogError("Couldn't find the WeaponScript script inside the current helded weapon : " + currentWeapon.name); }
 
             //Handle WeaponSpot rotation
-            Vector2 lookDir = mousePos - weaponScript.shootPoint.transform.position;
+            Vector2 lookDir = mousePos - weaponScript.GetWeaponShootPoint().transform.position;
             float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
             if (Mathf.Sqrt(Mathf.Pow(lookDir.x, 2) + Mathf.Pow(lookDir.y, 2)) > 1.5f)
             {
                 weaponRb.rotation = angle;
             }
-            Debug.DrawLine(weaponScript.shootPoint.transform.position, mousePos);
+            Debug.DrawRay(weaponScript.GetWeaponShootPoint().transform.position, weaponScript.GetWeaponShootPoint().transform.right * 10);
 
 
             //Handle gun flip and arm rotation
-            if (weaponScript.weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY)
+            if (weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY)
             {
                 weaponSpot.transform.localPosition = new Vector2(-0.65f, -0.25f);
-                weaponScript.weaponSpriteHolder.transform.localPosition = weaponScript.flipCoord;
+                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.GetFlipCoords();
                 if (weaponRb.rotation >= -45 && weaponRb.rotation < 45)
                 {
-                    weaponScript.weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY = false;
+                    weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY = false;
                 }
             }
-            else if (!weaponScript.weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY)
+            else if (!weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY)
             {
                 weaponSpot.transform.localPosition = new Vector2(0.65f, -0.25f);
-                weaponScript.weaponSpriteHolder.transform.localPosition = weaponScript.noFlipCoord;
+                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.GetFlipCoords();
                 if (weaponRb.rotation < -135 || weaponRb.rotation >= 135)
                 {
-                    weaponScript.weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY = true;
+                    weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY = true;
                 }
             }
         }
@@ -104,6 +104,44 @@ public class PlayerBehaviour : MonoBehaviour
         {
             ScollDown();
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            IInteractable interactable = GetPlayerClosestInterraction();
+            interactable.Interact(this.gameObject);
+        }
+    }
+
+    private IInteractable GetPlayerClosestInterraction()
+    {
+        List<IInteractable> interactablesList = new List<IInteractable>();
+        float interactRange = 2f;
+        Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, interactRange);
+        foreach (Collider2D collider in colliderArray)
+        {
+            if (collider.TryGetComponent(out IInteractable interactables))
+            {
+                interactablesList.Add(interactables);
+            }
+        }
+
+        IInteractable closestInteractable = null;
+        foreach (IInteractable interactables in interactablesList)
+        {
+            if (closestInteractable == null)
+            {
+                closestInteractable = interactables;
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, interactables.GetTransform().position) < Vector3.Distance(transform.position, closestInteractable.GetTransform().position))
+                {
+                    closestInteractable = interactables;
+                }
+            }
+        }
+
+        return closestInteractable;
     }
 
     private void ScollDown()

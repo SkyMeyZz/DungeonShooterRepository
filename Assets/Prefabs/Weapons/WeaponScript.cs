@@ -1,40 +1,48 @@
 using UnityEngine;
 
-public class WeaponScript : MonoBehaviour
+public class WeaponScript : MonoBehaviour, IInteractable
 {
+    #region Variables
     [Header("References")]
-    public GameObject shootPoint;
-    public GameObject weaponSpriteHolder;
-    public bool multiplesProjectilesTypes;
-    public GameObject[] projectilePrefab;
-    public Sprite weaponSprite;
+    [SerializeField] private GameObject shootPoint;
+    [SerializeField] private GameObject weaponSpriteHolder;
 
     [Header("Parameters")]
-    public bool infiniteAmmo;
-    public bool infiniteMagazine;
-    public int currentAmmoInMagazine;
-    public int ammoPerMagazine;
-    public int currentAmmo;
-    public int maxAmmo;
-    public int ammoPerShot;
-    public float reloadTime;
-    [Space(10)]
-    public bool isReloading;
-    public bool canShoot;
-    public float timeBetweenShot;
-    [Space(10)]
-    public float shootAngle;
-    public int bulletsPerShot;
-    public enum ShootingMode { automatic, semiAutomatic }
-    public ShootingMode shootingMode;
-    [Space(10)]
-    public bool hasRecoil;
-    public float recoilForce;
-    [Space(10)]
-    public Vector3 noFlipCoord;
-    public Vector3 flipCoord;
+    private bool isReloading;
+    private bool canShoot;
+
+    private int currentAmmo;
+    private int currentAmmoInMagazine;
 
     private float reloadTimer;
+
+    [Header("Weapon Parameter")]
+    [SerializeField] private ShootingMode shootingMode;
+    private enum ShootingMode { automatic, semiAutomatic }
+    [Space(20)]
+    [SerializeField] private bool infiniteAmmo;
+    [SerializeField] private bool infiniteMagazine;
+    [Space(20)]
+    [SerializeField] private int ammoPerMagazine;
+    [SerializeField] private int maxAmmo;
+    [SerializeField] private int ammoCostPerShot;
+    [SerializeField] private float reloadTime;
+    [SerializeField] private float shootAngle;
+    [SerializeField] private int bulletsPerShot;
+    [SerializeField] private float timeBetweenShot;
+    [Space(20)]
+    [SerializeField] private bool multiplesProjectilesTypes;
+    [SerializeField] private GameObject[] projectilePrefab;
+    [Space(20)]
+    [SerializeField] private bool hasRecoil;
+    [SerializeField] private float recoilForce;
+
+    [Header("Visuals")]
+    [SerializeField] private Sprite weaponSprite;
+    [Space(10)]
+    [SerializeField] private Vector3 noFlipCoord;
+    [SerializeField] private Vector3 flipCoord;
+    #endregion
 
     void Awake()
     {
@@ -58,10 +66,10 @@ public class WeaponScript : MonoBehaviour
 
     void Initialisation()
     {
-        shootPoint = GameObject.Find("ShootPoint");
+        //shootPoint = GameObject.Find("ShootPoint");
         if (shootPoint == null) { Debug.LogError("Couldn't find the ShootPoint GameObject inside the scene on this item :" + this.gameObject.name); }
 
-        weaponSpriteHolder = GameObject.Find("WeaponSprite");
+        //weaponSpriteHolder = GetComponentInChildren<SpriteRenderer>().gameObject;
         if (weaponSpriteHolder == null) { Debug.LogError("Couldn't find the WeaponSprite GameObject inside the scene on this item :" + this.gameObject.name); }
 
         weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponSprite;
@@ -71,6 +79,14 @@ public class WeaponScript : MonoBehaviour
         if (GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
 
         transform.localPosition = Vector3.zero;
+
+        if(infiniteAmmo)
+        {
+            currentAmmoInMagazine = 1;
+        }
+        else currentAmmoInMagazine = ammoPerMagazine;
+
+        currentAmmo = maxAmmo;
 
         canShoot = true;
     }
@@ -147,10 +163,9 @@ public class WeaponScript : MonoBehaviour
 
     private void Reload()
     {
-        reloadTimer = reloadTime;
+        reloadTimer =  reloadTime;
         isReloading = true;
         canShoot = false;
-        Debug.Log("Reloading !");
     }
 
     private void Shoot()
@@ -158,12 +173,11 @@ public class WeaponScript : MonoBehaviour
         canShoot = false;
         if (!infiniteAmmo)
         {
-            currentAmmoInMagazine -= ammoPerShot;
+            currentAmmoInMagazine -= ammoCostPerShot;
         }
-        Debug.Log("Pew !");
-        if (ammoPerShot > 1)
+        if (ammoCostPerShot > 1)
         {
-            for (int i = 0; i < ammoPerShot; i++)
+            for (int i = 0; i < ammoCostPerShot; i++)
             {
                 Instantiate(projectilePrefab[0], shootPoint.transform.position, Quaternion.Euler(new Vector3(shootPoint.transform.eulerAngles.x, shootPoint.transform.eulerAngles.y, shootPoint.transform.eulerAngles.z + Random.Range(-shootAngle / 2, shootAngle / 2))));
             }
@@ -194,5 +208,43 @@ public class WeaponScript : MonoBehaviour
     {
         isReloading = false;
         canShoot = true;
+    }
+
+    public GameObject GetWeaponShootPoint()
+    {
+        return this.shootPoint;
+    }
+
+    public GameObject GetWeaponSpriteHolder()
+    {
+        return this.weaponSpriteHolder;
+    }
+
+    public Vector3 GetFlipCoords()
+    {
+        if (weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY)
+        {
+            return this.flipCoord;
+        }
+        else if (!weaponSpriteHolder.GetComponent<SpriteRenderer>().flipY)
+        {
+            return this.noFlipCoord;
+        }
+        else return Vector3.zero;
+    }
+
+    public Sprite GetWeaponSprite()
+    {
+        return this.weaponSprite;
+    }
+
+    public void Interact(GameObject interactor)
+    {
+        //interact
+    }
+
+    public Transform GetTransform()
+    {
+        return this.transform;
     }
 }
