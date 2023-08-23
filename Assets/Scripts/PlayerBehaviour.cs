@@ -51,22 +51,26 @@ public class PlayerBehaviour : MonoBehaviour
         {
             weaponSpot.SetActive(true);
             weaponScript = currentWeapon.GetComponent<WeaponScript>();
+
+
             if (weaponScript == null) { Debug.LogError("Couldn't find the WeaponScript script inside the current helded weapon : " + currentWeapon.name); }
 
             //Handle WeaponSpot rotation
             Vector2 lookDir = mousePos - weaponScript.GetWeaponShootPoint().transform.position;
             lookDir = lookDir.normalized;
+            float minOrientationRange = 2f;
             float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-            weaponScript.transform.eulerAngles = new Vector3(0, 0, angle);
+            if(Vector2.Distance(transform.position, mousePos) > minOrientationRange)
+            {
+                weaponScript.transform.eulerAngles = new Vector3(0, 0, angle);
+            }
             Debug.DrawRay(weaponScript.GetWeaponShootPoint().transform.position, weaponScript.GetWeaponShootPoint().transform.right * 10);
-
 
             //Handle gun flip and arm rotation
             if (weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY)
             {
                 weaponSpot.transform.localPosition = new Vector2(-0.65f, -0.25f);
-                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.GetFlipCoords();
-                if (weaponRb.rotation >= -45 && weaponRb.rotation < 45)
+                if (weaponScript.transform.localEulerAngles.z < 45 || weaponScript.transform.localEulerAngles.z >= 325)
                 {
                     weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY = false;
                 }
@@ -74,8 +78,7 @@ public class PlayerBehaviour : MonoBehaviour
             else if (!weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY)
             {
                 weaponSpot.transform.localPosition = new Vector2(0.65f, -0.25f);
-                weaponScript.GetWeaponSpriteHolder().transform.localPosition = weaponScript.GetFlipCoords();
-                if (weaponRb.rotation < -135 || weaponRb.rotation >= 135)
+                if (weaponScript.transform.localEulerAngles.z >= 135 && weaponScript.transform.localEulerAngles.z < 225)
                 {
                     weaponScript.GetWeaponSpriteHolder().GetComponent<SpriteRenderer>().flipY = true;
                 }
@@ -106,7 +109,14 @@ public class PlayerBehaviour : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             IInteractable interactable = GetPlayerClosestInterraction();
-            interactable.Interact(this.gameObject);
+            if (interactable == null) return;
+
+            interactable.Interact(gameObject);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            DropWeapon();
         }
     }
 
@@ -160,7 +170,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void AddWeapon(GameObject weapon)
     {
-        weapon = Instantiate(weapon, transform.position, transform.rotation);
         weapons.Add(weapon);
         weaponListIndex = weapons.Count - 1;
         currentWeapon = weapons[weapons.Count - 1];
@@ -168,6 +177,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void DropWeapon()
     {
+        currentWeapon.GetComponent<WeaponScript>().Drop();
         ScollDown();
         weapons.Remove(currentWeapon);
     }

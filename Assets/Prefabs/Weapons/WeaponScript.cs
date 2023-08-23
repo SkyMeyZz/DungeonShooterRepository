@@ -6,6 +6,7 @@ public class WeaponScript : MonoBehaviour, IInteractable
     [Header("References")]
     [SerializeField] private GameObject shootPoint;
     [SerializeField] private GameObject weaponSpriteHolder;
+    private Collider2D interactableCollider;
 
     [Header("Parameters")]
     private bool isReloading;
@@ -15,7 +16,8 @@ public class WeaponScript : MonoBehaviour, IInteractable
     private int currentAmmoInMagazine;
 
     private float reloadTimer;
-    private enum WeaponState { Held, Dropped};
+    private enum WeaponState {Held, Dropped};
+    private WeaponState currentWeaponState;
 
     [Header("Weapon Parameter")]
     [SerializeField] private ShootingMode shootingMode;
@@ -52,9 +54,16 @@ public class WeaponScript : MonoBehaviour, IInteractable
 
     void Update()
     {
-        HandleInputs();
-        HandleReload();
-        HandleState();
+        if(currentWeaponState == WeaponState.Held)
+        {
+            interactableCollider.enabled = false;
+            HandleInputs();
+            HandleReload();
+        }
+        else if(currentWeaponState == WeaponState.Dropped)
+        {
+            interactableCollider.enabled = true;
+        }
     }
     private void OnDisable()
     {
@@ -67,11 +76,13 @@ public class WeaponScript : MonoBehaviour, IInteractable
 
     void Initialisation()
     {
-        //shootPoint = GameObject.Find("ShootPoint");
+        currentWeaponState = WeaponState.Dropped;
+
         if (shootPoint == null) { Debug.LogError("Couldn't find the ShootPoint GameObject inside the scene on this item :" + this.gameObject.name); }
 
-        //weaponSpriteHolder = GetComponentInChildren<SpriteRenderer>().gameObject;
         if (weaponSpriteHolder == null) { Debug.LogError("Couldn't find the WeaponSprite GameObject inside the scene on this item :" + this.gameObject.name); }
+
+        interactableCollider = GetComponent<CircleCollider2D>();
 
         weaponSpriteHolder.GetComponent<SpriteRenderer>().sprite = weaponSprite;
 
@@ -136,7 +147,6 @@ public class WeaponScript : MonoBehaviour, IInteractable
                 Debug.Log("Out of ammo :v !");
             }
         }
-
     }
 
     private void HandleReload()
@@ -154,11 +164,6 @@ public class WeaponScript : MonoBehaviour, IInteractable
                 currentAmmoInMagazine = ammoPerMagazine;
             }
         }
-    }
-
-    private void HandleState()
-    {
-        
     }
 
     private void Reload()
@@ -197,6 +202,17 @@ public class WeaponScript : MonoBehaviour, IInteractable
             GameManager.instance.players.GetComponent<Rigidbody2D>().AddForce(-dir.normalized * recoilForce, ForceMode2D.Impulse);
         }
         Invoke("ResetCanShoot", timeBetweenShot);
+    }
+
+    public void Drop()
+    {
+        if (isReloading)
+        {
+            reloadTimer = reloadTime;
+            ResetIsReloading();
+        }
+        transform.parent = null;
+        currentWeaponState = WeaponState.Dropped;
     }
 
     private void ResetCanShoot()
@@ -240,11 +256,14 @@ public class WeaponScript : MonoBehaviour, IInteractable
 
     public void Interact(GameObject interactor)
     {
-        GameManager.instance.players.GetComponent<PlayerBehaviour>().currentWeapon = this.gameObject;
-        transform.parent = GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot.transform;
-        if (GameManager.instance.players.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
-
+        currentWeaponState = WeaponState.Held;
+        transform.parent = interactor.GetComponent<PlayerBehaviour>().weaponSpot.transform;
         transform.localPosition = Vector3.zero;
+        interactor.GetComponent<PlayerBehaviour>().currentWeapon = gameObject;
+
+        if (interactor.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
+
+        interactor.GetComponent<PlayerBehaviour>().AddWeapon(gameObject);
     }
 
     public Transform GetTransform()

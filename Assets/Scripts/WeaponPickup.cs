@@ -13,9 +13,12 @@ public class WeaponPickup : MonoBehaviour, IInteractable
 
     public void Interact(GameObject interactor)
     {
+        heldWeapon = Instantiate(heldWeapon, transform.position, transform.rotation);
         interactor.GetComponent<PlayerBehaviour>().AddWeapon(heldWeapon);
+        heldWeapon.transform.parent = interactor.transform;
+        heldWeapon.transform.localPosition = Vector3.zero;
+
         GetComponent<CircleCollider2D>().enabled = false;
-        Destroy(this.gameObject);
     }
 
     public Transform GetTransform()

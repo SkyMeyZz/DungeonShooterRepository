@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4669165789186551366}
   - component: {fileID: 5887478603932173542}
+  - component: {fileID: 8296348031443000966}
   m_Layer: 0
   m_Name: WeaponSprite
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223571346587153291}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.227, y: 0.004, z: -0.15}
+  m_LocalPosition: {x: 0.4, y: 0.125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -74,8 +75,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 11
-  m_Sprite: {fileID: -206425911, guid: 1667e0f7c9ed98d4f917bd0152633ef8, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 4e52cc369313dd145b9572d13c0db381, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -85,6 +86,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8296348031443000966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223571346587153291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c425569ac560f44291439f6c57e914f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootPoint: {fileID: 5713778834366603214}
 --- !u!1 &5713778834366603214
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,7 +123,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5713778834366603214}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5000001, y: 0, z: 0}
+  m_LocalPosition: {x: 0.754, y: 0.278, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -126,6 +140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1884689495649250685}
   - component: {fileID: 7312454084123998988}
+  - component: {fileID: 358444300449708624}
   m_Layer: 0
   m_Name: Guezert Eagle (il est nul)
   m_TagString: Untagged
@@ -142,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 6035627835790043691}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4669165789186551366}
@@ -178,6 +193,41 @@ MonoBehaviour:
   - {fileID: 764240487574787305, guid: 7892c16439306114b885cc1fd97d39ee, type: 3}
   hasRecoil: 1
   recoilForce: 2
-  weaponSprite: {fileID: -206425911, guid: 1667e0f7c9ed98d4f917bd0152633ef8, type: 3}
-  noFlipCoord: {x: 0.235, y: 0.135, z: 0}
-  flipCoord: {x: 0.235, y: -0.135, z: 0}
+  weaponSprite: {fileID: 21300000, guid: 4e52cc369313dd145b9572d13c0db381, type: 3}
+  noFlipCoord: {x: 0.4, y: 0.125, z: 0}
+  flipCoord: {x: 0.4, y: -0.125, z: 0}
+--- !u!58 &358444300449708624
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6035627835790043691}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.46, y: 0.27}
+  serializedVersion: 2
+  m_Radius: 2.08

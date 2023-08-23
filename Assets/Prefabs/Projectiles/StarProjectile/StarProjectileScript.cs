@@ -7,6 +7,7 @@ public class StarProjectileScript : MonoBehaviour
     private float time;
     private Camera cam;
     private int offset;
+    [Range(0, 1)]
 
     public float bulletSpeed;
     public GameObject starProjectileDeathParticle;
