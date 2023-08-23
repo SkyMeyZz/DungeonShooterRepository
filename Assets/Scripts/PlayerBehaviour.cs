@@ -4,19 +4,27 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     [Header("Movements")]
-    public float moveSpeed;
-    Vector2 movement;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float dashSpeedMultiplier;
+    [SerializeField] private float dashTime;
+    [SerializeField] private GameObject dashParticle;
+    private Vector2 movement;
+    private enum MovementState { normal, dodgeRolling };
+    private MovementState currentMovementState;
+    private bool canDodgeRoll;
+    private Vector2 dodgeDir;
+    private float dodgingTimer;
 
     [Header("Camera")]
-    public Camera cam;
-    public GameObject cameraPoint;
-    public Vector3 mousePos;
+    [SerializeField] private Camera cam;
+    [SerializeField] private GameObject cameraPoint;
+    private Vector3 mousePos;
 
     [Header("Weapon Handling")]
     [SerializeField]
     private List<GameObject> weapons;
-    public GameObject weaponSpot;
-    public GameObject currentWeapon;
+    [SerializeField] private GameObject weaponSpot;
+    [SerializeField] private GameObject currentWeapon;
     private WeaponScript weaponScript;
     [SerializeField]
     private int weaponListIndex;
@@ -28,6 +36,8 @@ public class PlayerBehaviour : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
         weaponRb = weaponSpot.GetComponent<Rigidbody2D>();
+        currentMovementState = MovementState.normal;
+        canDodgeRoll = true;
     }
 
     private void Update()
@@ -36,13 +46,19 @@ public class PlayerBehaviour : MonoBehaviour
         HandleWeapon();
         SelectWeapon();
 
-        cameraPoint.transform.position = Vector3.Lerp(rb.position, mousePos, 0.25f); //calcule et assigne la position de l'objet cameraPoint utilisé pour la position de la camera
+        cameraPoint.transform.position = Vector3.Lerp(rb.position, mousePos, 0.40f); //calcule et assigne la position de l'objet cameraPoint utilisé pour la position de la camera
     }
 
     private void FixedUpdate()
     {
-        rb.AddForce(movement * moveSpeed * 100 * Time.fixedDeltaTime, ForceMode2D.Force);
-
+        if (currentMovementState == MovementState.normal)
+        {
+            rb.position += movement.normalized * moveSpeed * Time.fixedDeltaTime;
+        }
+        else if (currentMovementState == MovementState.dodgeRolling)
+        {
+            DodgeRoll();
+        }
     }
 
     private void HandleWeapon()
@@ -60,7 +76,7 @@ public class PlayerBehaviour : MonoBehaviour
             lookDir = lookDir.normalized;
             float minOrientationRange = 2f;
             float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-            if(Vector2.Distance(transform.position, mousePos) > minOrientationRange)
+            if (Vector2.Distance(transform.position, mousePos) > minOrientationRange)
             {
                 weaponScript.transform.eulerAngles = new Vector3(0, 0, angle);
             }
@@ -92,8 +108,11 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void HandleInputs()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        if (currentMovementState != MovementState.dodgeRolling)
+        {
+            movement.x = Input.GetAxisRaw("Horizontal");
+            movement.y = Input.GetAxisRaw("Vertical");
+        }
 
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -117,6 +136,12 @@ public class PlayerBehaviour : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             DropWeapon();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && canDodgeRoll)
+        {
+            Instantiate(dashParticle, transform.position, transform.rotation);
+            HandleDodgeRolling();
         }
     }
 
@@ -196,5 +221,37 @@ public class PlayerBehaviour : MonoBehaviour
                 weapon.SetActive(false);
             i++;
         }
+    }
+
+    private void HandleDodgeRolling()
+    {
+        dodgeDir = movement;
+        dodgingTimer = dashTime;
+        currentMovementState = MovementState.dodgeRolling;
+    }
+
+    private void DodgeRoll()
+    {
+        rb.position += dodgeDir.normalized * moveSpeed * dashSpeedMultiplier * Time.deltaTime;
+        dodgingTimer -= Time.deltaTime;
+        if (dodgingTimer <= 0)
+        {
+            currentMovementState = MovementState.normal;
+        }
+    }
+
+    public GameObject GetWeaponSpot()
+    {
+        return weaponSpot;
+    }
+
+    public void SetCurrentWeapon(GameObject newCurrentWeapon)
+    {
+        currentWeapon = newCurrentWeapon;
+    }
+
+    public Vector3 GetMousePos()
+    {
+        return mousePos;
     }
 }

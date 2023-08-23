@@ -197,7 +197,7 @@ public class WeaponScript : MonoBehaviour, IInteractable
         }
         if (hasRecoil)
         {
-            Vector2 dir = GameManager.instance.players.GetComponent<PlayerBehaviour>().mousePos - shootPoint.transform.position;
+            Vector2 dir = GameManager.instance.players.GetComponent<PlayerBehaviour>().GetMousePos() - shootPoint.transform.position;
             Debug.DrawLine(shootPoint.transform.position, dir);
             GameManager.instance.players.GetComponent<Rigidbody2D>().AddForce(-dir.normalized * recoilForce, ForceMode2D.Impulse);
         }
@@ -257,11 +257,11 @@ public class WeaponScript : MonoBehaviour, IInteractable
     public void Interact(GameObject interactor)
     {
         currentWeaponState = WeaponState.Held;
-        transform.parent = interactor.GetComponent<PlayerBehaviour>().weaponSpot.transform;
+        transform.parent = interactor.GetComponent<PlayerBehaviour>().GetWeaponSpot().transform;
         transform.localPosition = Vector3.zero;
-        interactor.GetComponent<PlayerBehaviour>().currentWeapon = gameObject;
+        interactor.GetComponent<PlayerBehaviour>().SetCurrentWeapon(gameObject); 
 
-        if (interactor.GetComponent<PlayerBehaviour>().weaponSpot == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
+        if (interactor.GetComponent<PlayerBehaviour>().GetWeaponSpot() == null) { Debug.LogError("Couldn't find the player WeaponSpot GameObject : " + this.gameObject.name); }
 
         interactor.GetComponent<PlayerBehaviour>().AddWeapon(gameObject);
     }

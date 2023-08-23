@@ -307,10 +307,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21f410c627c99ad4ebba22801dc4f5d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 30
+  moveSpeed: 5
+  dashSpeedMultiplier: 3
+  dashTime: 0.2
+  dashParticle: {fileID: 6111105501411851055, guid: d78d292122f1ce643994ad67387f3fe6, type: 3}
   cam: {fileID: 0}
   cameraPoint: {fileID: 5711472785948738546}
-  mousePos: {x: 0, y: 0, z: 0}
   weapons: []
   weaponSpot: {fileID: 2977965670415319004}
   currentWeapon: {fileID: 0}
