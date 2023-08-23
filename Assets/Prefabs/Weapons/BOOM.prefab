@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4669165789186551366}
   - component: {fileID: 5887478603932173542}
-  - component: {fileID: 8296348031443000966}
+  - component: {fileID: 2928971434178564648}
   m_Layer: 0
   m_Name: WeaponSprite
   m_TagString: Untagged
@@ -26,8 +26,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223571346587153291}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 0.125, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.087, y: 0.056, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3937079467681790672}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 11
-  m_Sprite: {fileID: 21300000, guid: 4e52cc369313dd145b9572d13c0db381, type: 3}
+  m_Sprite: {fileID: 21300000, guid: af092045858f8344c8125bbc68a5dae0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8296348031443000966
+--- !u!114 &2928971434178564648
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,8 +123,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5713778834366603214}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.754, y: 0.278, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.288, y: -0.016, z: 0}
+  m_LocalScale: {x: 0.86742, y: 0.86742, z: 0.86742}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4669165789186551366}
@@ -140,9 +140,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1884689495649250685}
   - component: {fileID: 7312454084123998988}
-  - component: {fileID: 358444300449708624}
+  - component: {fileID: -8655370357722880007}
   m_Layer: 0
-  m_Name: Guezert Eagle (il est nul)
+  m_Name: BOOM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 6035627835790043691}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4669165789186551366}
@@ -181,22 +181,22 @@ MonoBehaviour:
   shootingMode: 0
   infiniteAmmo: 0
   infiniteMagazine: 0
-  ammoPerMagazine: 6
-  maxAmmo: 100
+  ammoPerMagazine: 1
+  maxAmmo: 500
   ammoCostPerShot: 1
-  reloadTime: 1.5
+  reloadTime: 2.5
   shootAngle: 0
   bulletsPerShot: 1
-  timeBetweenShot: 1
+  timeBetweenShot: 0.1
   multiplesProjectilesTypes: 0
   projectilePrefab:
-  - {fileID: 764240487574787305, guid: 7892c16439306114b885cc1fd97d39ee, type: 3}
-  hasRecoil: 1
-  recoilForce: 2
-  weaponSprite: {fileID: 21300000, guid: 4e52cc369313dd145b9572d13c0db381, type: 3}
-  noFlipCoord: {x: 0.4, y: 0.125, z: 0}
-  flipCoord: {x: 0.4, y: -0.125, z: 0}
---- !u!58 &358444300449708624
+  - {fileID: 764240487574787305, guid: e6d6253b33cfaaa44a8d14e0f21ad483, type: 3}
+  hasRecoil: 0
+  recoilForce: 0
+  weaponSprite: {fileID: 21300000, guid: af092045858f8344c8125bbc68a5dae0, type: 3}
+  noFlipCoord: {x: 0.235, y: 0.135, z: 0}
+  flipCoord: {x: 0.235, y: -0.135, z: 0}
+--- !u!58 &-8655370357722880007
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -228,6 +228,6 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.46, y: 0.27}
+  m_Offset: {x: 0.25, y: 0.1}
   serializedVersion: 2
-  m_Radius: 2.08
+  m_Radius: 1
