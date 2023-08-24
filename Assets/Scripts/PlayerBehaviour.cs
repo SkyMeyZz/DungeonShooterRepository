@@ -32,6 +32,8 @@ public class PlayerBehaviour : NetworkBehaviour
     private Rigidbody2D rb;
     private Rigidbody2D weaponRb;
 
+    public PlayerBehaviour localInstance { get; private set; }
+
     private void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -40,13 +42,13 @@ public class PlayerBehaviour : NetworkBehaviour
         canDodgeRoll = true;
 
     }
-
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         cam = CameraManager.instance.mainCamera;
 
         if (!IsOwner) return;
         CameraManager.instance.virtualCamera.Follow = cameraPoint.transform;
+        localInstance = this;
     }
 
     private void Update()
