@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerBehaviour : MonoBehaviour
+public class PlayerBehaviour : NetworkBehaviour
 {
     [Header("Movements")]
     [SerializeField] private float moveSpeed;
@@ -16,7 +17,7 @@ public class PlayerBehaviour : MonoBehaviour
     private float dodgingTimer;
 
     [Header("Camera")]
-    [SerializeField] private Camera cam;
+    private Camera cam;
     [SerializeField] private GameObject cameraPoint;
     private Vector3 mousePos;
 
@@ -26,7 +27,6 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private GameObject weaponSpot;
     [SerializeField] private GameObject currentWeapon;
     private WeaponScript weaponScript;
-    [SerializeField]
     private int weaponListIndex;
 
     private Rigidbody2D rb;
@@ -38,13 +38,25 @@ public class PlayerBehaviour : MonoBehaviour
         weaponRb = weaponSpot.GetComponent<Rigidbody2D>();
         currentMovementState = MovementState.normal;
         canDodgeRoll = true;
+
+    }
+
+    private void Start()
+    {
+        cam = CameraManager.instance.mainCamera;
+
+        if (!IsOwner) return;
+        CameraManager.instance.virtualCamera.Follow = cameraPoint.transform;
     }
 
     private void Update()
     {
-        HandleInputs();
         HandleWeapon();
         SelectWeapon();
+
+        if (!IsOwner) return;
+        HandleInputs();
+
 
         cameraPoint.transform.position = Vector3.Lerp(rb.position, mousePos, 0.40f); //calcule et assigne la position de l'objet cameraPoint utilisé pour la position de la camera
     }
