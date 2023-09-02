@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3721620626697032413}
   - component: {fileID: 601213060879693579}
   - component: {fileID: 7339389984244271340}
+  - component: {fileID: -5673898435775162720}
   m_Layer: 10
   m_Name: StarProjectile
   m_TagString: Untagged
@@ -275,6 +276,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af27f06060333e34498a270e7cd796db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 2
+  bulletSpeed: 1
   starProjectileDeathParticle: {fileID: 8259744357778635704, guid: 3e9ad85dbf625ca4cbfa469d8a191f42, type: 3}
   starProjectileSpawnParticle: {fileID: 2443939265388932512, guid: a0d86aa49184f974e84dadcbee561ca6, type: 3}
+--- !u!114 &-5673898435775162720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5980242731203925155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

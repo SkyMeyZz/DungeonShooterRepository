@@ -25256,6 +25256,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 280730028}
     m_Modifications:
+    - target: {fileID: -977019236446968078, guid: 43e18edaa3e91be42a6907e126996b1f, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3669076537
+      objectReference: {fileID: 0}
     - target: {fileID: 1884689495649250685, guid: 43e18edaa3e91be42a6907e126996b1f, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -25842,6 +25846,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2654801549164982478, guid: d551a1f76b0bccc4ab67e7dc26513e02, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4186547542
+      objectReference: {fileID: 0}
     - target: {fileID: 6035627835790043691, guid: d551a1f76b0bccc4ab67e7dc26513e02, type: 3}
       propertyPath: m_Name
       value: Guezert Eagle (il est nul)
@@ -25984,6 +25992,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 280730028}
     m_Modifications:
+    - target: {fileID: -4218104168120119141, guid: 84bff51bacbc00949960fe64d8d774ca, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2744421393
+      objectReference: {fileID: 0}
     - target: {fileID: 1884689495649250685, guid: 84bff51bacbc00949960fe64d8d774ca, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -26661,6 +26673,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 280730028}
     m_Modifications:
+    - target: {fileID: -8070663821902485391, guid: 8f7cfc1b4c7da5b4095844bf052d238c, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1503590087
+      objectReference: {fileID: 0}
     - target: {fileID: 2040400813793160324, guid: 8f7cfc1b4c7da5b4095844bf052d238c, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -26838,6 +26854,10 @@ PrefabInstance:
     - target: {fileID: 1884689495649250685, guid: 2161b0ab5a8f871449a8e0c1e674c676, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935058347907696565, guid: 2161b0ab5a8f871449a8e0c1e674c676, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 959632037
       objectReference: {fileID: 0}
     - target: {fileID: 6035627835790043691, guid: 2161b0ab5a8f871449a8e0c1e674c676, type: 3}
       propertyPath: m_Name
